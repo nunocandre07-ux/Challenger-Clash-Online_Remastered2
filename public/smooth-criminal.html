@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Smooth Criminal — The Impossible Lean | Challenger Clash</title>
+<style>
+:root{color-scheme:dark;--bg:#090b18;--panel:#15152a;--muted:#adb1ca;--line:#383958;--pink:#fc5ec9;--cyan:#60eaff;--gold:#ffce65;--good:#73f2b2}
+*{box-sizing:border-box}body{margin:0;background:#080914;color:white;font-family:system-ui,-apple-system,'Segoe UI',sans-serif}
+.wrap{max-width:940px;margin:0 auto;padding:16px}.shell{position:relative;overflow:hidden;border:1px solid #50416e;border-radius:22px;background:radial-gradient(ellipse at 50% 32%,#342451 0%,#17142f 43%,#0d0e1e 82%);box-shadow:0 15px 45px #0005}.shell:before{content:"";pointer-events:none;position:absolute;inset:0;background:repeating-linear-gradient(0deg,transparent 0 28px,#ffffff05 29px 30px);opacity:.55}.inner{position:relative;padding:22px 23px 19px}
+.head{display:flex;justify-content:space-between;align-items:flex-start;gap:12px}.eyebrow{font-size:10px;font-weight:900;letter-spacing:.21em;color:#f8a8df}.name{font-size:clamp(21px,4vw,31px);font-weight:950;letter-spacing:-.04em;margin:3px 0 0}.sub{font-size:12px;color:var(--muted);margin:6px 0 0}.difficulty{display:flex;flex-direction:column;gap:4px;align-items:flex-end;font-size:10px;letter-spacing:.13em;color:var(--muted);font-weight:800}.difficulty select{font:inherit;letter-spacing:0;background:#20203a;color:white;border:1px solid #59536e;border-radius:9px;padding:7px 10px;cursor:pointer}
+.stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin-top:18px}.stat{padding:10px 13px;background:#0a0c1a9c;border:1px solid #45415e;border-radius:11px}.stat .k{font-size:10px;text-transform:uppercase;color:#b9b7d0;letter-spacing:.08em}.stat .v{font-size:21px;font-weight:900;font-variant-numeric:tabular-nums;margin-top:2px}.stat .v.good{color:var(--good)}
+.dialwrap{position:relative;margin:6px auto -18px;max-width:700px}.dial{width:100%;display:block;overflow:visible;filter:drop-shadow(0 3px 18px #c442da24)}.hint{color:#a5abc8;text-align:center;font-size:12px;margin-top:0}.centerReadout{font-size:12px;text-align:center;font-weight:750;letter-spacing:.1em;color:#d9c9fa;min-height:19px}
+.meterlabel{display:flex;justify-content:space-between;font-size:11px;color:var(--muted);font-weight:700;margin-top:12px}.meter{height:12px;border-radius:30px;background:#080915;border:1px solid #49405b;overflow:hidden;margin-top:6px}.fill{height:100%;width:0%;background:linear-gradient(90deg,#9064ff,#e963f7,#ffcc7f);transition:width .08s linear}
+.buttons{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:16px}.steer{font:inherit;min-height:65px;border:1px solid #7b6997;border-radius:13px;color:#fff;background:linear-gradient(180deg,#403256,#221d39);font-size:16px;font-weight:900;touch-action:none;user-select:none;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:12px;box-shadow:inset 0 1px #fff2}.steer:hover{border-color:#d4a7ff}.steer.down,.steer:active{background:linear-gradient(180deg,#6e3e91,#3b2259);box-shadow:0 0 22px #c24ce044,inset 0 1px #fff4;transform:translateY(1px)}.key{border:1px solid #ffffff5b;padding:5px 10px;border-radius:7px;font-size:12px;background:#ffffff17}
+.footer{display:flex;gap:14px;align-items:center;justify-content:space-between;margin-top:15px;flex-wrap:wrap}.btn{font:inherit;background:#ee6ad8;border:0;border-radius:10px;padding:11px 20px;color:#200d26;font-weight:900;cursor:pointer;box-shadow:0 3px 16px #ec65d844}.btn:hover{background:#ff94ed}.btn:focus-visible,.steer:focus-visible{outline:2px solid #ffcf6d;outline-offset:3px}.status{font-size:13px;color:#c5c0dd}.status strong{color:var(--gold)}.note{margin:9px 0 0;color:#9b9bb7;font-size:11px;line-height:1.6}.instructions{margin:13px 0 0;text-align:center;color:#bdc1d5;font-size:12px}.instructions b{color:#fff}.banner{border:1px solid #65456d;background:#261c36;border-radius:12px;padding:10px 13px;margin-top:14px;font-size:13px;min-height:40px;color:#e7d9f4}.over{color:#ff8897}.win{color:#73f2b2}
+@media(max-width:560px){.wrap{padding:8px}.inner{padding:16px 13px}.stat{padding:10px 7px}.stat .v{font-size:17px}.dialwrap{margin:-6px auto -24px}.steer{min-height:60px}.name{font-size:23px}.head{gap:8px}.sub{max-width:260px}}
+</style><style>
+body{background:transparent}.wrap{max-width:840px;padding:9px}.inner{padding:16px 17px 13px}.stats{margin-top:12px}.stat{padding:7px 10px}.stat .v{font-size:19px}
+.dialwrap{max-width:610px;margin:-4px auto -20px}.buttons{margin-top:8px}.steer{min-height:50px}.footer{margin-top:8px}.banner{margin-top:8px;min-height:25px;padding:9px 12px}.note{margin-top:5px}.instructions{margin-top:7px}
+.fixedChallenge{display:block;background:#352b53;border:1px solid #8e6ca2;padding:7px 12px;border-radius:8px;color:#ffcf69;margin-top:5px;font-size:12px}
+@media(max-width:560px){.wrap{padding:0}.inner{padding:13px 12px}.head{gap:5px}.stats{gap:5px}.stat{padding:5px 5px}.stat .k{font-size:8px}.stat .v{font-size:17px}.dialwrap{margin:-3px auto -22px}.steer{min-height:53px;font-size:13px}.hint{font-size:10px}.footer{margin-top:6px}.name{font-size:21px}.sub{font-size:11px}.instructions,.status{font-size:11px}.note{font-size:10px}.fixedChallenge{padding:5px 7px}.eyebrow{font-size:9px}}
+@media(max-height:670px){.inner{padding:10px}.stat{padding:5px}.dialwrap{max-width:500px;margin:-14px auto -23px}.buttons{margin-top:5px}.steer{min-height:42px}.instructions{margin-top:5px}.note{display:none}.footer{margin-top:3px}.banner{margin-top:3px}}
+</style></head><body>
+<div class="wrap"><div class="shell"><div class="inner">
+  <div class="head"><div><div class="eyebrow">SMOOTH CRIMINAL · MOVE MINIGAME</div><div class="name">THE IMPOSSIBLE LEAN</div><p class="sub">Stay balanced in green, and aim for the tiny golden Perfect Spot. Hold the sweet spot for the ultimate performance.</p></div><label class="difficulty">DIFFICULTY<select id="difficulty"><option value="easy">Relaxed</option><option value="normal" selected>Normal</option><option value="hard">Hard</option></select></label></div>
+  <div class="stats"><div class="stat"><div class="k">Time left</div><div class="v" id="time">10.0s</div></div><div class="stat"><div class="k">Green time</div><div class="v good" id="centerTime">0.0s</div></div><div class="stat"><div class="k">Perfect time</div><div class="v" id="perfectTime" style="color:#ffcf69">0.0s</div></div><div class="stat"><div class="k">Lean</div><div class="v" id="lean">0°</div></div></div>
+  <div class="dialwrap"><svg class="dial" viewBox="0 0 640 345" role="img" aria-label="Semicircular balance meter with moving pointer">
+    <defs><filter id="pointerGlow" x="-100%" y="-100%" width="300%" height="300%"><feGaussianBlur stdDeviation="5"/></filter><linearGradient id="needleGradient" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#fff2d3"/><stop offset="1" stop-color="#f2b5ff"/></linearGradient></defs>
+    <path d="M 85 310 A 235 235 0 0 1 555 310" fill="none" stroke="#ded8ff" stroke-opacity=".1" stroke-width="32" stroke-linecap="round"/>
+    <g id="arcs"></g><g id="ticks"></g>
+    <line x1="320" y1="310" x2="320" y2="64" stroke="#b5b3db" stroke-width="1.6" stroke-dasharray="5 7" stroke-opacity=".52"/>
+    <g id="needle" transform="rotate(0 320 310)"><line x1="320" y1="310" x2="320" y2="92" stroke="#ffe6bd" stroke-opacity=".6" stroke-width="13" filter="url(#pointerGlow)"/><line x1="320" y1="310" x2="320" y2="92" stroke="url(#needleGradient)" stroke-width="6" stroke-linecap="round"/><path d="M 320 76 L 311 98 L 329 98 Z" fill="#ffffff"/><circle cx="320" cy="310" r="16" fill="#231d3b" stroke="#ffcbf4" stroke-width="4"/><circle cx="320" cy="310" r="7" fill="#ffc8e4"/></g>
+    <text x="64" y="337" fill="#ef9aab" font-family="system-ui" font-size="14" font-weight="800">FALL</text><text x="320" y="52" text-anchor="middle" fill="#ffd274" font-family="system-ui" font-size="13" font-weight="850">SWEET SPOT</text><text x="576" y="337" text-anchor="end" fill="#ef9aab" font-family="system-ui" font-size="14" font-weight="800">FALL</text>
+  </svg></div>
+  <div class="centerReadout" id="tipMessage">READY TO PERFORM</div><div class="hint">Gold center = Perfect Spot (±0.8°) · Green = safe scoring zone (±4°) · Red = fall</div>
+  <div class="meterlabel"><span>PERFORMANCE</span><span id="progressNum">0%</span></div><div class="meter"><div class="fill" id="progress"></div></div>
+  <div class="buttons"><button class="steer" id="left" type="button"><span class="key">← / A</span> PUSH LEFT</button><button class="steer" id="right" type="button">PUSH RIGHT <span class="key">→ / D</span></button></div>
+  <div class="instructions">Hold <b>← / →</b> or <b>A / D</b> to correct your balance. Release early to avoid overshooting.</div>
+  <div class="footer"><button class="btn" id="start" type="button">▶ READY — START PERFORMANCE</button><div class="status" id="status">Hold the center for <strong>10 seconds</strong>. Falling starts at ±52°.</div></div>
+  <div class="banner" id="result" aria-live="polite">Earn 1 damage per second in green, plus another 1 per second in gold. Hold gold for 5 seconds to heal 5 HP, apply Tune Deaf and gain Adrenaline!</div>
+  <p class="note">Damage = ceil(green seconds + gold seconds). Gold also counts as green. Your opponent receives the official result from the server.</p>
+</div></div></div>
+<script src="smooth-criminal-physics.js"></script>
+<script>
+(() => {'use strict';
+const $=id=>document.getElementById(id),SM=window.CCSmoothPhysics;
+const needle=$('needle'),arcs=$('arcs'),ticks=$('ticks'),R=235,CX=320,CY=310;
+const point=(a,r)=>({x:CX+Math.sin(a*Math.PI/180)*r,y:CY-Math.cos(a*Math.PI/180)*r});
+const path=(a,b,r)=>{const p=point(a,r),q=point(b,r);return `M ${p.x.toFixed(2)} ${p.y.toFixed(2)} A ${r} ${r} 0 0 1 ${q.x.toFixed(2)} ${q.y.toFixed(2)}`};
+for(const [a,b,color,w] of [[-52,-38,'#f06073',24],[-38,-4,'#b58df9',24],[-4,-.8,'#62e6ae',26],[-.8,.8,'#ffd160',29],[.8,4,'#62e6ae',26],[4,38,'#b58df9',24],[38,52,'#f06073',24]]){const el=document.createElementNS('http://www.w3.org/2000/svg','path');for(const [k,v] of Object.entries({d:path(a,b,R),fill:'none',stroke:color,'stroke-width':w,'stroke-linecap':'butt',opacity:'.91'}))el.setAttribute(k,v);arcs.appendChild(el)}
+for(let a=-60;a<=60;a+=10){const p=point(a,255),q=point(a,266),el=document.createElementNS('http://www.w3.org/2000/svg','line');for(const [k,v] of Object.entries({x1:p.x,y1:p.y,x2:q.x,y2:q.y,stroke:'#c4bada','stroke-width':a===0?3:1.5,opacity:a===0?1:.65}))el.setAttribute(k,v);ticks.appendChild(el)}
+let mini=null,canControl=false,serverOffset=0,snapshot=null,snapshotAt=0,localPractice=false,localLast=0,renderId=0;
+const held={left:false,right:false};
+const clamp=(x,min,max)=>Math.min(max,Math.max(min,x));
+function tell(action,direction){if(localPractice)return; if(mini)parent.postMessage({type:'cc-smooth-action',id:mini.id,action,direction},location.origin)}
+function control(){return canControl&&!!mini?.ready?Number(held.right)-Number(held.left):0}
+function updateControl(){const value=control();if(localPractice)return;tell('control',value)}
+const heartbeat=setInterval(()=>{if(mini?.ready&&(held.left||held.right)&&canControl)updateControl()},160);
+function release(){if(!held.left&&!held.right)return;held.left=held.right=false;for(const which of ['left','right'])$(which).classList.remove('down');updateControl()}
+function start(){if(!canControl)return;const b=$('start');b.disabled=true;b.textContent='STARTING…';tell('ready')}
+$('start').addEventListener('click',start);
+function setHeld(which,value){if(!canControl||!mini?.ready)return;if(held[which]===value)return;held[which]=value;$(which).classList.toggle('down',value);updateControl()}
+for(const which of ['left','right']){const el=$(which);el.addEventListener('pointerdown',e=>{e.preventDefault();try{el.setPointerCapture(e.pointerId)}catch{}setHeld(which,true)});el.addEventListener('pointerup',()=>setHeld(which,false));el.addEventListener('pointercancel',()=>setHeld(which,false));el.addEventListener('lostpointercapture',()=>setHeld(which,false));el.addEventListener('contextmenu',e=>e.preventDefault())}
+document.addEventListener('keydown',e=>{const k=e.key.toLowerCase();const which=e.key==='ArrowLeft'||k==='a'?'left':e.key==='ArrowRight'||k==='d'?'right':null;if(which){e.preventDefault();setHeld(which,true)}});
+document.addEventListener('keyup',e=>{const k=e.key.toLowerCase();const which=e.key==='ArrowLeft'||k==='a'?'left':e.key==='ArrowRight'||k==='d'?'right':null;if(which){e.preventDefault();setHeld(which,false)}});
+window.addEventListener('blur',release);document.addEventListener('visibilitychange',()=>{if(document.hidden)release()});
+window.addEventListener('message',event=>{
+ if(event.origin!==location.origin||event.source!==window.parent)return;
+ const packet=event.data;if(packet?.type!=='cc-smooth-state')return;
+ if(mini?.id!==packet.mini?.id)release();
+ mini=packet.mini;canControl=packet.canControl===true;
+ serverOffset=Number(packet.serverNow)-Date.now();
+ if(mini?.smooth){snapshot={...mini.smooth};snapshotAt=performance.now()}
+ $('start').hidden=!!mini?.ready||!canControl;
+ $('status').innerHTML=!canControl?'WATCHING THE PERFORMANCE':mini?.ready?'Hold ← / → or A / D to balance the pointer.':'Your performance lasts <strong>10 seconds</strong>.';
+});
+function render(ts){
+ const started=mini?.ready&&snapshot;
+ let sim=started?{...snapshot}:SM.start();
+ if(started){SM.advance(sim,Math.max(0,Math.min(.14,(ts-snapshotAt)/1000)),control());}
+ const time=started?clamp((mini.deadline-Date.now()-serverOffset)/1000,0,10):10;
+ const angle=sim.angle;
+ needle.setAttribute('transform',`rotate(${angle.toFixed(3)} 320 310)`);
+ $('lean').textContent=`${Math.abs(angle).toFixed(0)}° ${angle<-.8?'L':angle>.8?'R':''}`;
+ $('time').textContent=`${time.toFixed(1)}s`;
+ $('centerTime').textContent=`${sim.goodSeconds.toFixed(1)}s`;
+ $('perfectTime').textContent=`${sim.perfectSeconds.toFixed(1)}s`;
+ $('progress').style.width=`${100*(1-time/10)}%`;
+ $('progressNum').textContent=`${Math.floor(100*(1-time/10))}%`;
+ const abs=Math.abs(angle);
+ const msg=!started?(canControl?'READY TO PERFORM':'AWAITING DANCER'):(sim.fell?'BALANCE LOST':abs<=.8?'★ PERFECT SPOT ★':abs<=4?'GOOD BALANCE':abs>=38?'CRITICAL — COUNTERSTEER!':abs>=25?'DANGER — STEER BACK!':'KEEP IT STEADY');
+ $('tipMessage').textContent=msg;
+ $('tipMessage').style.color=abs<=.8?'#ffd160':abs<=4?'#86f2bf':abs>=38?'#ff7e8e':'#f2c7ff';
+ const score=SM.result(sim),remaining=Math.max(0,5-score.perfectSeconds);
+ $('result').textContent=started?`${score.damage} base damage earned so far · ${remaining>0?remaining.toFixed(1)+'s more GOLD time for Tune Deaf, +5 HP and Adrenaline!':'★ PERFECT REWARD UNLOCKED! Tune Deaf · +5 HP · Adrenaline'}`:'Green gives 1 damage/s. Gold gives 2 damage/s in total. Damage rounds up at the end.';
+ renderId=requestAnimationFrame(render);
+}
+renderId=requestAnimationFrame(render);
+})();
+</script></body></html>

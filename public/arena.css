@@ -1,0 +1,331 @@
+/* Challenger Clash — arena refresh. Layered over the original minigame visuals. */
+:root{
+  color-scheme:dark;
+  --bg:#090e1d;--panel:#10182a;--card:#172136;--line:#344365;
+  --text:#f6f8ff;--muted:#acb9d0;--accent:#85a6ff;
+  --good:#6ff2ac;--bad:#ff7e93;--warn:#fbc775;
+  --glow:rgba(114,139,255,.2);
+}
+html{scroll-behavior:smooth}
+body{
+  min-height:100dvh;
+  background:radial-gradient(ellipse 58% 38% at 7% -5%,rgba(86,80,204,.24),transparent),
+    radial-gradient(ellipse 50% 32% at 97% 18%,rgba(10,159,184,.11),transparent),
+    linear-gradient(166deg,#090d1d 0%,#090f20 57%,#10112a 100%);
+  color:var(--text);letter-spacing:.005em
+}
+body::before{
+  content:"";position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.16;
+  background-image:linear-gradient(rgba(150,175,255,.13) 1px,transparent 1px),linear-gradient(90deg,rgba(150,175,255,.13) 1px,transparent 1px);
+  background-size:54px 54px;mask-image:linear-gradient(to bottom,transparent 0%,black 36%,transparent 100%)
+}
+::selection{background:#5268cc;color:white}
+.wrap{max-width:1180px;padding:24px 22px 40px}
+h1,h2,h3{letter-spacing:-.025em}
+h2{line-height:1.12}
+.small{font-size:13px;line-height:1.48}
+.panel,.card{border:1px solid rgba(112,139,199,.25);box-shadow:0 16px 45px rgba(3,7,21,.22)}
+.panel{border-radius:20px;background:linear-gradient(140deg,rgba(17,26,46,.97),rgba(12,20,36,.97))}
+.card{background:linear-gradient(155deg,rgba(26,39,63,.95),rgba(18,28,49,.97));border-radius:17px}
+.pill{background:rgba(35,48,75,.68);border:1px solid rgba(139,164,219,.25);border-radius:50px;letter-spacing:.03em}
+.btn{border-radius:12px;background:linear-gradient(165deg,#24334e,#19253b);border:1px solid #3a4b6e;box-shadow:0 3px 0 rgba(0,0,0,.14);transition:transform .14s ease,border-color .14s ease,box-shadow .14s ease,background .14s ease;color:#eaf1ff}
+.btn:hover:not(:disabled){transform:translateY(-2px);border-color:#87a7ee;box-shadow:0 8px 24px rgba(42,69,138,.25)}
+.btn:active:not(:disabled){transform:translateY(0);box-shadow:none}
+.btn.primary{background:linear-gradient(115deg,#447cfe,#7655e6);border-color:#939dff;color:#fff;box-shadow:0 8px 24px rgba(66,97,242,.2)}
+.btn.primary:hover:not(:disabled){box-shadow:0 9px 30px rgba(88,102,254,.38)}
+.btn.danger{color:#ffbdc6;border-color:#8c4d62;background:linear-gradient(160deg,#442438,#302136)}
+.btn:disabled{opacity:.45;filter:saturate(.5)}
+:where(button,input,select,summary,a):focus-visible{outline:3px solid #e4ca75!important;outline-offset:3px!important}
+input,select{background:#0d162a;border:1px solid #415477;border-radius:11px;color:#f4f6ff}
+input:focus,select:focus{border-color:#90b3ff;outline:1px solid #90b3ff}
+input::placeholder{color:#8495b1}
+/* Site navigation */
+.arenaHeader{display:flex;justify-content:space-between;align-items:center;gap:18px;flex-wrap:wrap;padding:5px 0 18px;border-bottom:1px solid rgba(120,147,207,.18)}
+.brandMark{display:inline-flex;align-items:center;gap:14px;text-decoration:none;color:inherit;min-width:0}
+.brandIcon{display:grid;place-items:center;width:56px;height:56px;flex-shrink:0;border-radius:17px;background:linear-gradient(145deg,#5c79ed,#382c82);font-size:29px;box-shadow:0 10px 22px rgba(72,73,199,.27),inset 0 1px rgba(255,255,255,.25);border:1px solid #8898f7}
+.brandText{display:flex;flex-direction:column;gap:1px}
+.brandText strong{font-size:clamp(16px,2.4vw,25px);letter-spacing:-.05em;line-height:1;font-weight:1000}
+.brandText strong em{font-style:normal;background:linear-gradient(100deg,#90dbff,#c6a2ff);background-clip:text;-webkit-background-clip:text;color:transparent}
+.brandText small{letter-spacing:.23em;font-size:10px;color:#a2b0d0;font-weight:850}
+.buildTag{letter-spacing:.07em;color:#cbadff;background:#533b75;border:1px solid #8561ad;padding:2px 6px;border-radius:4px;margin-left:6px}
+.headerActions{display:flex;flex-wrap:wrap;justify-content:flex-end;gap:8px}
+.headerActions .btn{font-size:13px;min-height:40px;padding:8px 12px}
+.utilityBar{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:11px 3px 17px;color:#8ea0bf;font-size:11px;letter-spacing:.12em;font-weight:850}
+#connection{color:#5fe5ae}
+#connection.offline{color:#ffab81}
+.utilityHint{color:#7584a5;text-align:right}
+.eyebrow{color:#9bb3ec;font-size:11px;font-weight:900;letter-spacing:.19em;text-transform:uppercase}
+/* Home / mode selection */
+.homePanel{position:relative;overflow:hidden;padding:0 30px 26px}
+.heroContent{position:relative;margin:0 -30px 27px;padding:55px 42px 47px;background:radial-gradient(ellipse at 85% 45%,rgba(82,87,214,.32),transparent 57%),linear-gradient(120deg,rgba(14,24,46,.95),rgba(20,22,49,.86));border-bottom:1px solid rgba(125,145,217,.23)}
+.heroContent::after{content:"⚔";position:absolute;right:5%;top:9%;font-size:clamp(120px,19vw,240px);line-height:1;color:rgba(118,135,231,.075);transform:rotate(-15deg);pointer-events:none}
+.heroContent h2{max-width:700px;margin:16px 0 15px;font-size:clamp(40px,5.7vw,74px);font-weight:1000;letter-spacing:-.065em;line-height:1.04}
+.heroContent h2 span{display:block;background:linear-gradient(94deg,#a4bdff 0%,#96edff 40%,#cf9cff 88%);color:transparent;background-clip:text;-webkit-background-clip:text}
+.heroContent p{max-width:630px;color:#bfcae0;font-size:clamp(15px,1.8vw,17px);line-height:1.65;margin:0 0 22px}
+.heroSpark{color:#b89cff;margin-left:8px}
+.heroPills{display:flex;flex-wrap:wrap;gap:9px;color:#dbe5fd;font-size:12px;font-weight:750}
+.heroPills span{padding:7px 11px;border-radius:50px;background:rgba(62,76,126,.27);border:1px solid rgba(147,166,221,.22)}
+.sectionLabel{font-size:12px;letter-spacing:.2em;color:#98abd2;margin:0 0 17px}
+.homeModes{gap:16px}
+.homeModeCard{position:relative;overflow:hidden;min-width:0;background:linear-gradient(150deg,rgba(28,41,69,.92),rgba(18,29,49,.95));border:1px solid #3b4b70;border-radius:18px;padding:24px;transition:transform .15s,border-color .15s}
+.homeModeCard:nth-child(1){border-top:3px solid #79cfff}
+.homeModeCard:nth-child(2){border-top:3px solid #b797ff}
+.homeModeCard:hover{border-color:#8198da;transform:translateY(-2px)}
+.homeModeCard h3{font-size:23px;margin:12px 0 7px}
+.homeModeCard .small{line-height:1.55;min-height:45px}
+.modeIcon{display:grid;place-items:center;width:49px;height:49px;border-radius:14px;background:rgba(100,122,213,.17);border:1px solid rgba(146,168,255,.3);font-size:27px}
+.modeTag{font-size:10px;letter-spacing:.12em;vertical-align:middle;color:#b0c6ff;border:1px solid #596ea4;padding:4px 7px;border-radius:7px;margin-left:5px}
+.joinDivider{display:flex;align-items:center;gap:11px;letter-spacing:.15em;font-size:10px;font-weight:850;color:#8e9fbe;margin:21px 0 12px}
+.joinDivider:before,.joinDivider:after{content:"";flex:1;height:1px;background:#354662}
+.joinRow{flex-wrap:nowrap;gap:8px}
+.joinRow input{min-width:0;letter-spacing:.16em;font-weight:900;font-size:13px}
+.joinRow button{flex-shrink:0}
+.inviteHint{color:#90ecb5;margin:10px 0 0;font-size:13px}
+.howTo{display:flex;justify-content:center;gap:22px;flex-wrap:wrap;margin:30px 0 0;color:#667da5;font-size:10px;font-weight:900;letter-spacing:.15em}
+.howTo span{color:#b2bfdb;letter-spacing:0}
+/* Champion lobby */
+.lobbyTop{margin-bottom:12px}
+.lobbyIdentity h2{font-size:32px;margin:6px 0 0}
+.inviteBox{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;border-radius:16px;border:1px solid #6075ab;background:linear-gradient(115deg,rgba(47,76,129,.28),rgba(60,43,100,.29));padding:18px 20px;margin:12px 0}
+.inviteBox .code{display:block;width:max-content;max-width:100%;font-size:clamp(26px,4vw,38px);line-height:1.15;letter-spacing:.21em;font-weight:1000;color:#edeeff;background:none;border:0;padding:7px 0}
+.inviteActions{display:flex;gap:8px;flex-wrap:wrap}
+#inviteFeedback{color:#82e8ba;min-height:14px}
+#lobby .grid2{margin-top:20px;align-items:stretch}
+#lobby .grid2>.card{padding:21px}
+#lobby .grid2 h3{font-size:21px;margin-top:0}
+.randomBtn{margin:2px 0 16px;font-size:12px;width:100%;border-style:dashed}
+#startGame{min-height:55px;font-size:17px}
+/* Fighter cards */
+.battleTop{margin-bottom:14px}
+.battleTopSpacer{flex:1}
+.battleTop>.eyebrow{color:#77f0ac}
+.fighters{grid-template-columns:minmax(0,1fr) 60px minmax(0,1fr);align-items:stretch;gap:8px}
+.fighters .card{padding:22px;min-height:185px;border-radius:18px;position:relative;overflow:hidden}
+.fighters .card:after{position:absolute;right:12px;top:5px;font-size:85px;line-height:1;color:rgba(255,255,255,.035);font-weight:1000;pointer-events:none}
+#fighter0{border-top:3px solid #4dcdf5}
+#fighter1{border-top:3px solid #ff7dcc}
+#fighter0:after{content:"I"}#fighter1:after{content:"II"}
+.fighters .card h3{font-size:clamp(17px,2.3vw,25px);margin:0 0 12px;overflow-wrap:anywhere}
+.fighters .card.active{outline:1px solid rgba(166,210,255,.6);box-shadow:0 0 0 2px rgba(101,144,255,.1),0 9px 40px rgba(67,91,160,.2)}
+#fighter1 .hpfill{background:linear-gradient(90deg,#b867bc,#fa78a2)}
+#fighter0 .hpfill{background:linear-gradient(90deg,#58cba9,#65d2ed)}
+.hpbar{height:16px;border:1px solid rgba(125,146,178,.18)}
+.fighterStatus{margin-top:9px;font-size:10px;color:#8aabd1;font-weight:850;letter-spacing:.09em}
+.fighterStatus .statusOffline{color:#ff93a1}
+.vs{font-size:18px;font-style:italic;letter-spacing:.07em;color:#becbfc;text-shadow:0 0 23px #586de0;padding-top:72px}
+.momentumTrack{border-color:#344869}
+/* Turn controls */
+#game>.panel{padding:22px}
+.turnHeading{display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap;margin-bottom:8px}
+.turnHeading h2{font-size:clamp(25px,4vw,33px);margin:4px 0}
+.turnIndicator{font-size:10px;font-weight:1000;letter-spacing:.12em;border:1px solid #485676;border-radius:100px;padding:9px 12px;color:#9daac5;background:#1c263b}
+.turnIndicator.isMine{border-color:#7eeec2;background:rgba(22,131,89,.19);color:#7ef0b8;box-shadow:0 0 18px rgba(24,178,118,.1)}
+#turnInfo{color:#b6c5e1}
+.turnTip{margin:14px 0 17px;border:1px solid #344e73;border-left:3px solid #88b2ff;background:rgba(76,107,166,.12);border-radius:10px;padding:11px 13px;color:#c6d7f6;line-height:1.55;font-size:13px}
+.actions{grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}
+.actions .btn{min-height:72px;white-space:normal;line-height:1.28;font-size:14px;background:linear-gradient(156deg,#263753,#1b2941);border-color:#45618c}
+.actions .btn:hover:not(:disabled){background:linear-gradient(145deg,#345d94,#243a62)}
+.actions #attackBtn{border-color:#a66f8d}
+.actions #defendBtn{border-color:#668fbb}
+.actions #chargeBtn{border-color:#b18c5e}
+.actions #specialBtn{border-color:#9071bc}
+.actions .ultimateBtn{grid-column:span 2}
+.actions .ultimateBtn.ready{background:linear-gradient(135deg,#67219b,#963dbe)}
+.disconnectNotice{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;background:rgba(140,92,35,.15);border:1px solid #8c7344;color:#ffdea4;padding:12px 16px;border-radius:12px;margin-bottom:15px;font-size:13px}
+#postBattle{margin-top:16px;border-color:#9c8aca;background:linear-gradient(140deg,#2c2551,#192445)}
+#postBattleTitle{font-size:clamp(23px,4vw,34px)}
+.gameBottom{margin-top:18px}
+#chat,#log{scrollbar-color:#49638d #121b2d;min-height:135px;max-height:330px}
+.gameBottom .panel{min-width:0}.gameBottom h3{margin:0 0 15px}
+.gameBottom .entry{padding:10px 0;color:#bac8e3}
+.siteFooter{text-align:center;margin:26px 0 0;font-size:10px;color:#687999;font-weight:900;letter-spacing:.19em}
+.siteFooter span{padding:0 7px;color:#6864b2}
+/* Dialog readability and pointer targets */
+.helpBook,.pokemonPanel,.strikePanel,.purchaseCard,.magicBagPopup{box-shadow:0 35px 90px rgba(0,0,0,.65)}
+.helpBook summary{min-height:44px;display:list-item;padding:8px 0}
+.helpOverlay{backdrop-filter:blur(8px)}
+/* Accessibility: system-wide and user-controlled reduced motion. Do not interfere with JS clocks. */
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+@media(prefers-reduced-motion:reduce){
+  body :not(.domainCountdownHero):not(.beatTimerFill),body :not(.domainCountdownHero):not(.beatTimerFill)::before,body :not(.domainCountdownHero):not(.beatTimerFill)::after{animation-duration:.001ms!important;transition-duration:.001ms!important;scroll-behavior:auto!important}
+}
+body.reduceMotion,body.reduceMotion *,body.reduceMotion *::before,body.reduceMotion *::after{animation-duration:.001ms!important;transition-duration:.001ms!important;scroll-behavior:auto!important}
+@media(min-width:1000px){.actions{grid-template-columns:repeat(7,minmax(0,1fr))}.actions .ultimateBtn{grid-column:auto}}
+@media(max-width:760px){
+  .wrap{padding:13px 13px 24px}.arenaHeader{align-items:flex-start;gap:14px}.headerActions{justify-content:flex-start;width:100%}.brandIcon{height:49px;width:49px;font-size:24px}.brandText strong{font-size:22px}
+  .utilityBar{padding:10px 0 15px}.utilityHint{display:none}
+  .homePanel{padding:0 16px 20px}.heroContent{margin:0 -16px 23px;padding:38px 22px 35px}.heroContent h2{font-size:clamp(37px,9vw,56px)}.heroContent p{font-size:15px}.heroContent::after{right:-18%;top:3%;font-size:165px}
+  .homeModes{grid-template-columns:1fr}.homeModeCard{padding:20px}.homeModeCard .small{min-height:auto}
+  .fighters{grid-template-columns:minmax(0,1fr) 30px minmax(0,1fr);gap:5px}.fighters .card{padding:13px;min-height:180px}.fighters .card h3{font-size:17px}.fighters .card .tag{font-size:10px}.vs{font-size:11px;padding-top:74px}.fighterStatus{font-size:9px}
+  #game>.panel{padding:17px}.actions{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.actions .btn{min-height:64px;font-size:13px}.actions .ultimateBtn{grid-column:span 2}
+  .battleTopSpacer{display:none}.battleTop{gap:7px}.battleTop .btn{font-size:11px;min-height:40px;padding:7px 9px}
+  .gameBottom{grid-template-columns:1fr}
+  .inviteBox{padding:16px}.inviteActions{width:100%}.inviteActions .btn{flex:1}
+  .howTo{justify-content:flex-start;gap:9px 20px}.howTo span{flex:1 1 40%}
+}
+@media(max-width:390px){
+  .brandText strong{font-size:19px}.headerActions .btn{font-size:12px;padding:7px 9px}
+  .heroContent h2{font-size:37px}.joinRow{flex-wrap:wrap}.joinRow button{width:100%}
+  .fighters{grid-template-columns:minmax(0,1fr) 22px minmax(0,1fr)}.fighters .card{padding:10px}.fighters .card h3{font-size:15px}.fighters .card .tag{padding:3px 4px}.vs{font-size:9px}
+}
+
+/* Combat content update — intentionally complements the original arena layout. */
+.chargeChoices{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,220px),1fr));gap:10px;margin-top:12px}
+.chargeChoices .btn{min-height:62px;text-align:left;line-height:1.45;white-space:normal}
+.chargeChoices .btn[disabled]{opacity:.48;cursor:not-allowed}
+.moveCost{display:inline-block;margin-left:4px;border-radius:7px;padding:2px 5px;font-size:11px;font-weight:900}
+.costDown{color:#ffb5bd;background:rgba(235,63,98,.14)}.costUp{color:#84efb5;background:rgba(23,182,130,.14)}
+.comboGuide{border:1px solid rgba(124,146,198,.22);border-radius:12px;margin-top:13px;padding:12px;display:grid;gap:7px;font-size:12px;line-height:1.5;color:var(--muted)}.comboGuide strong{color:var(--text)}
+.cooldownStrip{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px;align-items:center;line-height:1.2}
+.cooldownTitle{font-size:10px;letter-spacing:.1em;font-weight:900;color:var(--muted);margin-right:4px}
+.cooldownChip{font-size:11px;background:rgba(246,176,70,.09);color:#e8c384;border:1px solid rgba(231,168,75,.23);border-radius:40px;padding:5px 9px}
+.cooldownChip b{font-size:12px;color:#ffe4ad;margin-left:4px}.cooldownReady{color:var(--muted);font-size:11px}
+.matchStats{margin:14px 0}.matchStatsHead{color:#f1cd83;font-weight:900;letter-spacing:.09em;font-size:12px;margin-bottom:8px}
+.statsGrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.statsCol{background:rgba(8,19,38,.48);border:1px solid rgba(131,159,199,.23);padding:12px;border-radius:12px;min-width:0}.statsCol>strong{display:block;margin-bottom:9px;font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.statsValue{display:flex;align-items:center;justify-content:space-between;gap:6px;padding:7px 0;border-bottom:1px solid rgba(125,145,179,.14);font-size:12px}.statsValue span{color:var(--muted)}.statsValue b{color:var(--text);font-variant-numeric:tabular-nums}
+.combatFx.naturalCrit .combatFlash{background:radial-gradient(circle,rgba(255,225,111,.8) 0%,rgba(255,156,30,.32) 27%,transparent 54%)}
+.combatFx.naturalCrit .combatSlash{height:14px;background:linear-gradient(90deg,transparent,#fff6bf 28%,#ffb21d 52%,#fff7d0 70%,transparent);filter:drop-shadow(0 0 21px #ffbd48)}
+.combatFx.naturalCrit .combatDamage{font-size:clamp(30px,7.5vw,76px);color:#ffe69a!important;text-shadow:0 3px #763500,0 0 18px #faab25,0 0 40px rgba(255,184,38,.8);letter-spacing:.01em}
+@media(max-width:500px){.statsGrid{gap:6px}.statsCol{padding:8px}.statsValue{font-size:10px}.chargeChoices{grid-template-columns:1fr}.chargeChoices .btn{min-height:52px}}
+/* The Gambler — card table, slots and domain integrity */
+.gamblerOverlay{position:fixed;inset:0;z-index:1600;background:rgba(4,8,18,.87);display:grid;place-items:center;padding:18px;backdrop-filter:blur(12px)}
+.gamblerOverlay.hidden,.gamblerToast.hidden,.domainIntegrity.hidden{display:none!important}
+.gamblerStage{width:min(680px,100%);max-height:92vh;overflow:auto;background:linear-gradient(153deg,#12352d,#101d30 62%,#271c3f);border:1px solid rgba(248,194,91,.56);border-radius:22px;box-shadow:0 24px 96px #000c,0 0 40px #e1ba6d22;padding:clamp(18px,4vw,32px);color:#f4edda;text-align:center}
+.gamblerTitle{color:#ffd781;font-size:clamp(22px,4vw,34px);font-weight:950;letter-spacing:.04em;text-shadow:0 3px 22px #efc26077}
+.gamblerHint{font-size:13px;color:#c9d2d6;margin:12px 0;line-height:1.6}
+.gamblerLabel{color:#e3c58c;font-size:11px;font-weight:950;letter-spacing:.15em;margin-top:20px}
+.gamblerCards{display:flex;justify-content:center;gap:9px;flex-wrap:wrap;margin:10px 0}
+.gamblerCard{display:grid;place-items:center;min-width:54px;height:76px;padding:9px;border-radius:9px;background:linear-gradient(125deg,#fff,#e8eadf);border:2px solid #fff;color:#131929;font-size:24px;font-weight:950;box-shadow:0 8px 19px #0005}
+.gamblerCard.red{color:#be2e4c}.gamblerCard.back{background:repeating-linear-gradient(45deg,#322450,#322450 8px,#715cb0 9px,#715cb0 12px);color:#fcdb99;border-color:#9a81d3}
+.gamblerControls{display:flex;justify-content:center;flex-wrap:wrap;gap:9px;margin-top:22px}.gamblerControls>.btn{min-width:105px;flex:1 1 auto}
+.gamblerWagers{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin:20px 0}.gamblerWagers>div{display:flex;flex-direction:column;border:1px solid #ffffff25;border-radius:10px;padding:12px 6px;font-size:10px;font-weight:900;color:#c4cfde}.gamblerWagers strong{font-size:27px;color:#ffd581}
+.gamblerBetInput{display:block;width:130px;max-width:100%;padding:10px;border:1px solid #c3a47f;border-radius:8px;text-align:center;margin:10px auto;background:#e8e8e6;color:#151925;font-size:22px;font-weight:950}
+.gamblerReels{display:flex;gap:12px;justify-content:center;font-size:55px;margin:22px 0}.gamblerReels span{display:grid;place-items:center;min-width:82px;height:96px;background:linear-gradient(#fff6d8,#d8b77b);border:4px solid #f0ba55;border-radius:14px;box-shadow:0 0 18px #ffd86855}
+.gamblerToast{position:fixed;z-index:2100;left:50%;top:16%;transform:translateX(-50%);background:linear-gradient(130deg,#291948,#533665);color:white;border:2px solid #f7d36d;border-radius:20px;min-width:250px;max-width:90vw;padding:20px 25px;box-shadow:0 0 70px #ffc85864;text-align:center;display:flex;flex-direction:column;align-items:center;gap:9px;pointer-events:none}
+.gamblerFxEmoji{font-size:50px}.gamblerToast b{font-size:24px;color:#ffe8a0}.gamblerAnimate .gamblerFxEmoji{animation:gamblerCoinFlip .8s ease-in-out 2}@keyframes gamblerCoinFlip{0%{transform:rotateY(0)}100%{transform:rotateY(720deg)}}
+.domainIntegrity{position:fixed;z-index:1300;top:8px;left:50%;transform:translateX(-50%);width:min(470px,90vw);background:#090b19e8;color:#ffe9b5;border:1px solid #b7965a;border-radius:12px;padding:7px 12px;font-size:12px;font-weight:850;text-align:center;pointer-events:none}
+.domainIntegrityTrack{background:#392e42;height:7px;border-radius:9px;overflow:hidden;margin-top:5px}.domainIntegrityTrack>div{height:100%;background:linear-gradient(90deg,#f67772,#f7cb64);width:100%;transition:width .4s ease}
+@media(max-width:520px){.gamblerCard{min-width:44px;height:65px;font-size:20px}.gamblerStage{padding:18px 12px}.gamblerControls>.btn{font-size:12px;padding:10px}.gamblerReels{font-size:38px}.gamblerReels span{min-width:60px;height:76px}}
+
+/* Oct 30: responsive battle feedback */
+.slashHit{color:#63e2ab!important;filter:drop-shadow(0 0 8px #40d898);font-weight:900}
+.slashMiss{color:#ff8080!important;filter:drop-shadow(0 0 8px #f24d5c);font-weight:900}
+.pokemonSwitchSection{margin-top:16px;border-top:1px solid rgba(190,203,230,.25);padding-top:12px}
+.pokemonPpPick{display:flex;align-items:center;gap:7px;border-radius:9px;padding:9px;background:rgba(120,150,190,.12);cursor:pointer}
+.teamRocketSplash{position:fixed;z-index:999999;inset:20% 10% auto;max-width:520px;margin:auto;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;text-align:center;padding:26px;border:2px solid #fb565b;border-radius:20px;background:linear-gradient(160deg,#101522ee,#611822f6);box-shadow:0 0 50px #e1274766;animation:rocketArrival .4s ease-out;color:#fff;pointer-events:none}.teamRocketSplash strong{font-size:clamp(23px,6vw,44px);letter-spacing:3px;color:#ffdbd7}.teamRocketSplash small{font-size:15px}.rocketBadge{font-size:55px}@keyframes rocketArrival{from{transform:scale(.55) rotate(-7deg);opacity:0}to{transform:scale(1);opacity:1}}
+
+/* Semi-Ultimate readiness on Blue/Red Judas */
+.judasGoldReady{background:linear-gradient(115deg,#4a3211,#ae8020,#dfb957,#7d5512)!important;color:#fff8d2!important;border-color:#f8e4a3!important;box-shadow:0 0 14px rgba(255,197,47,.48),inset 0 0 13px rgba(255,239,174,.18)!important;animation:judasReadyGold 1.15s ease-in-out infinite alternate}@keyframes judasReadyGold{from{box-shadow:0 0 10px rgba(255,197,47,.38)}to{box-shadow:0 0 27px rgba(255,212,85,.84),inset 0 0 16px rgba(255,239,174,.24)}}
+
+
+/* Team Rocket Ultimate — video cinematic, synced through the room event. */
+.teamRocketCinematic{position:fixed;inset:0;z-index:1000001;display:flex;align-items:center;justify-content:center;padding:clamp(10px,3vw,24px);background:rgba(3,4,12,.96);backdrop-filter:blur(9px);animation:rocketArrival .28s ease-out}
+.teamRocketScreen{width:min(1060px,100%);max-height:96dvh;display:flex;flex-direction:column;align-items:center;gap:clamp(8px,1.7vh,15px);padding:clamp(12px,2.6vw,25px);border-radius:22px;background:radial-gradient(ellipse at 50% 0%,#4e162e,#140d22 56%,#050910);border:2px solid #e54868;box-shadow:0 0 70px rgba(243,63,97,.32);overflow:auto}
+.teamRocketHeading{font-size:clamp(20px,5.5vw,40px);font-weight:1000;letter-spacing:.11em;color:#ffcfb2;text-shadow:0 0 18px #ff355a;text-align:center}
+.teamRocketVideo{display:block;width:100%;height:auto;max-height:65dvh;aspect-ratio:16/9;object-fit:contain;background:#000;border-radius:14px;border:1px solid rgba(255,150,160,.4);box-shadow:0 12px 30px #0008}
+.teamRocketCaption{font-weight:900;font-size:clamp(11px,2.5vw,17px);text-align:center;color:#fff;letter-spacing:.035em}.teamRocketCaption span{color:#fb6672}
+.teamRocketSkip,.teamRocketSound{min-height:38px;padding:7px 15px}.teamRocketSound{background:#eeba4a!important;color:#221600!important}
+@media(max-height:640px){.teamRocketScreen{gap:5px;padding:8px}.teamRocketHeading{font-size:19px}.teamRocketVideo{max-height:58dvh}.teamRocketCaption{font-size:11px}}
+/* The Gloved One: concert-stage minigames, full viewport overlay */
+.gloveScene{width:min(560px,95vw);margin:auto;text-align:center;border-radius:22px;padding:clamp(14px,3vw,30px);background:radial-gradient(ellipse at 50% 0%,#47346e 0%,#1c1734 60%,#0e0c20 100%);border:2px solid #b797ed;box-shadow:0 0 30px #a879f655;color:white;display:flex;flex-direction:column;align-items:center;gap:15px;max-height:90dvh;overflow:auto}
+.gloveScene h2{font-size:clamp(20px,5vw,28px);letter-spacing:.08em;margin:0;color:#f8e7ff;text-shadow:0 0 16px #b671ff}
+.gloveScene p{max-width:450px;font-size:clamp(13px,2.7vw,15px);margin:0;color:#e6d5fd}
+.gloveTimer{font-size:23px;font-weight:900;color:#fce09a;letter-spacing:.1em}
+.gloveScore{font-weight:700;font-size:13px;color:#cdbbe9}
+.gloveBigArrow{font-size:clamp(85px,21vw,156px);font-weight:900;color:#82e6ff;text-shadow:0 0 26px #41c9ff,0 0 56px #be65ff;line-height:1.05;animation:gloveBeatPulse .26s ease-in-out alternate infinite}
+@keyframes gloveBeatPulse{from{transform:scale(.94)}to{transform:scale(1.04)}}
+.gloveControls{display:flex;gap:8px;width:100%;justify-content:center;flex-wrap:wrap}
+.gloveControls button,.gloveScene .btn{min-width:58px;min-height:48px;border:1px solid #ad84fd;border-radius:12px;background:linear-gradient(#624aa7,#312258);color:white;font-size:17px;font-weight:900;cursor:pointer;touch-action:manipulation}
+.gloveControls button:active{transform:scale(.94);background:#8262bf}
+.gloveFeedback{font-weight:900;font-size:20px;color:#fbd77c;min-height:25px}
+.gloveLean{font-size:52px;font-weight:900;color:#f8d385;width:100%}
+.gloveLeanBar{margin:8px auto;width:80%;height:21px;border:1px solid #dcbaff;border-radius:99px;position:relative;background:linear-gradient(90deg,#ff616d,#443b90 25%,#3bb3a7 45%,#3bb3a7 55%,#443b90 75%,#ff616d)}
+.gloveLeanBar i{position:absolute;top:-6px;width:5px;height:31px;background:#fff;border-radius:4px;box-shadow:0 0 10px white}
+@media(max-width:480px){.gloveScene{gap:10px}.gloveBigArrow{font-size:90px}.gloveControls button{min-height:44px}}
+
+.gloveFallingNote{animation:gloveNoteDrop .85s cubic-bezier(.22,.6,.3,1) both}
+@keyframes gloveNoteDrop{0%{transform:translateY(-65px) scale(.7);opacity:.25}70%{opacity:1}100%{transform:translateY(0) scale(1);opacity:1}}
+
+/* Rhythm responsiveness + concert-stage readability (November hotfix). */
+.gloveScenePro{width:min(720px,96vw);gap:9px;border:2px solid #c6a5ff;background:radial-gradient(circle at 50% 0%,#4e286f 0%,#18152b 60%,#0c1021 100%);box-shadow:0 0 38px #af76ed66,inset 0 0 32px #0008}
+.gloveKicker{letter-spacing:.24em;font-size:11px;color:#f5ca78;font-weight:900;text-shadow:0 0 14px #f8c96f80}
+.gloveHud{width:100%;display:flex;justify-content:space-between;align-items:center;gap:10px}
+.gloveScenePro .gloveTimer{font-size:clamp(18px,4vw,25px);font-variant-numeric:tabular-nums}
+.gloveTimeTrack{height:8px;width:100%;border-radius:20px;background:#121226;border:1px solid #736189;overflow:hidden}
+.gloveTimeTrack i{display:block;width:100%;height:100%;background:linear-gradient(90deg,#5bdcf7,#c97bff,#f8d070);transition:width .06s linear}
+.gloveRhythmField{position:relative;width:100%;height:clamp(230px,44dvh,420px);border-radius:15px;overflow:hidden;border:1px solid #9381b9;background:linear-gradient(180deg,#111d34,#141020 60%,#070918);box-shadow:inset 0 0 35px #0009}
+.gloveLaneGrid{position:absolute;inset:0;display:grid;grid-template-columns:repeat(4,1fr)}
+.gloveLane{border-right:1px solid #c7a3ff20;position:relative;background:linear-gradient(180deg,#ac8af30b,transparent)}
+.gloveLane:last-child{border:0}
+.gloveReceptor{position:absolute;top:86%;left:50%;transform:translate(-50%,-50%);width:clamp(48px,10vw,70px);height:clamp(48px,10vw,70px);border-radius:13px;background:#a6dcff19;border:2px solid #b9ccec9c;display:grid;place-items:center;font-size:clamp(24px,6vw,40px);font-weight:900;color:#f2fbff;box-shadow:0 0 16px #bca4ff30}
+.gloveReceptor.active{border-color:#83fff3;background:#40c8e750;box-shadow:0 0 26px #55ddff95}
+.gloveLiveNote{position:absolute;top:0%;left:12.5%;width:clamp(47px,10vw,69px);height:clamp(47px,10vw,69px);display:grid;place-items:center;transform:translate(-50%,-50%);border-radius:13px;background:linear-gradient(140deg,#a34ef8,#3c83eb);border:2px solid #e7cdff;box-shadow:0 0 22px #ba83fd9a;color:#fff;font-size:clamp(24px,6vw,38px);font-weight:1000;pointer-events:none;transition:opacity .06s linear}
+.gloveLiveNote.gloveNear{background:linear-gradient(120deg,#42c6bd,#5f96fa);box-shadow:0 0 32px #6cfff4}
+.gloveHitCaption{position:absolute;bottom:3px;left:0;right:0;text-align:center;font-size:10px;font-weight:900;letter-spacing:.22em;color:#dec3fa9c;pointer-events:none}
+.gloveScenePro .gloveFeedback{min-height:24px;color:#a4ffe5;font-size:clamp(14px,3vw,20px);text-shadow:0 0 12px #23d8e8a0}
+.gloveScenePro .gloveFeedback.gloveIsMiss{color:#ff7c8e}
+.gloveScenePro .gloveControls{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:7px}
+.gloveScenePro .gloveControls button{min-width:0;min-height:50px;font-size:clamp(18px,4vw,29px);touch-action:manipulation}
+.gloveScenePro .gloveControls:has(#gloveStop){grid-template-columns:1fr 1.5fr 1fr}
+.footworkConcert .footworkBanner{font-size:clamp(20px,4vw,28px);font-weight:1000;color:#ffdb7e;letter-spacing:.13em;text-shadow:0 0 15px #ffcf76}
+.footworkConcert .footworkTile{touch-action:manipulation;transition:transform .08s,background .08s}
+.footworkConcert .footworkTile.tapped{transform:scale(.86);filter:brightness(1.6);border-color:#8fffea}
+.rhythmClock{font-size:clamp(15px,3vw,21px);color:#f8d993;font-weight:900;letter-spacing:.06em;font-variant-numeric:tabular-nums}
+.rhythmProgress{height:8px;max-width:450px;margin:7px auto;border-radius:30px;background:#24233b;overflow:hidden}
+.rhythmProgress>span{display:block;height:100%;width:100%;background:linear-gradient(90deg,#70dfff,#a677f1,#efd074)}
+.danceNote.danceNear{background:linear-gradient(135deg,#48d8c7,#66a7ff);box-shadow:0 0 28px rgba(93,250,222,.75)}
+.danceCountdown.playing{inset:10px auto auto 15px;display:block;font-size:clamp(12px,2.5vw,17px);text-align:left;color:#a6ebff;text-shadow:0 0 10px #3a95d8}
+@media(max-width:520px){.gloveScenePro{padding:12px;gap:7px}.gloveRhythmField{height:min(46dvh,370px)}.gloveLiveNote,.gloveReceptor{width:45px;height:45px}.danceNote,.danceReceptor{width:42px;height:42px;font-size:27px}.danceField{height:min(55dvh,430px)}.gloveHitCaption{font-size:8px}}
+
+/* User-designed Smooth Criminal performance in the existing battle overlay. */
+.gloveSmoothFrame{display:block;width:min(850px,96vw);height:min(660px,93dvh);border:1px solid #ae8bd9;border-radius:20px;background:#090b18;box-shadow:0 22px 70px #000b,0 0 30px #f38bea28}
+@media(max-width:560px){.gloveSmoothFrame{height:min(660px,93dvh);width:98vw;border-radius:12px}}
+
+.gloveSmoothResultToast{position:fixed;z-index:1900;top:min(17dvh,135px);left:50%;transform:translateX(-50%);width:min(92vw,560px);display:flex;flex-direction:column;gap:8px;align-items:center;text-align:center;padding:20px 14px;color:#fff0fc;background:linear-gradient(135deg,#241637,#4d2367);border:2px solid #f5c56c;border-radius:20px;box-shadow:0 15px 80px #000c,0 0 30px #fbcc7080;pointer-events:none;animation:smoothResultsIn .28s ease-out}
+.gloveSmoothResultToast strong{font-size:clamp(17px,3vw,25px);letter-spacing:.06em;color:#ffd77b}.gloveSmoothResultToast span{font-size:clamp(13px,2vw,18px)}.gloveSmoothResultToast em{font-style:normal;color:#81efba;font-weight:800}
+@keyframes smoothResultsIn{from{opacity:0;transform:translate(-50%,-14px) scale(.96)}to{opacity:1;transform:translate(-50%,0) scale(1)}}
+
+/* Smooth Criminal: native, in-arena version of the supplied Impossible Lean design. */
+.gloveSmoothNative{--sc-good:#73f2b2;--sc-gold:#ffce65;position:relative;overflow:auto;box-sizing:border-box;width:min(940px,96vw);max-height:91dvh;padding:clamp(12px,2vw,22px);border:1px solid #50416e;border-radius:22px;color:#fff;background:radial-gradient(ellipse at 50% 32%,#342451 0%,#17142f 43%,#0d0e1e 82%);box-shadow:0 15px 45px #0008,0 0 28px #cc6be32b;font-family:system-ui,-apple-system,"Segoe UI",sans-serif}
+.gloveSmoothNative:before{content:"";pointer-events:none;position:absolute;inset:0;background:repeating-linear-gradient(0deg,transparent 0 28px,#ffffff05 29px 30px);opacity:.55}
+.gloveSmoothNative>*{position:relative}
+.gloveSmoothNative .smoothHead{display:flex;justify-content:space-between;align-items:flex-start;gap:12px}
+.gloveSmoothNative .smoothHead h2{font-size:clamp(21px,4vw,31px);font-weight:950;letter-spacing:-.04em;margin:3px 0 0;color:#fff}
+.gloveSmoothNative .smoothEyebrow{font-size:10px;font-weight:900;letter-spacing:.21em;color:#f8a8df}
+.gloveSmoothNative .smoothHead p{font-size:12px;color:#adb1ca;margin:6px 0 0}
+.gloveSmoothNative .smoothDifficulty{display:flex;flex-direction:column;align-items:flex-end;font-size:10px;letter-spacing:.13em;color:#adb1ca;font-weight:800;gap:5px}
+.gloveSmoothNative .smoothDifficulty strong{letter-spacing:0;font-size:12px;background:#20203a;color:white;border:1px solid #59536e;border-radius:9px;padding:7px 10px}
+.gloveSmoothNative .smoothStats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin-top:16px}
+.gloveSmoothNative .smoothStats>div{padding:10px 13px;background:#0a0c1a9c;border:1px solid #45415e;border-radius:11px;display:flex;flex-direction:column}
+.gloveSmoothNative .smoothStats small{font-size:10px;text-transform:uppercase;color:#b9b7d0;letter-spacing:.08em}
+.gloveSmoothNative .smoothStats strong{font-size:clamp(17px,3vw,21px);font-weight:900;font-variant-numeric:tabular-nums;margin-top:2px}
+.gloveSmoothNative .smoothGood{color:#73f2b2}.gloveSmoothNative .smoothGold{color:#ffcf69}
+.gloveSmoothNative .smoothDialWrap{margin:-8px auto -16px;max-width:700px}
+.gloveSmoothNative .smoothDial{width:100%;height:auto;display:block;overflow:visible;filter:drop-shadow(0 3px 18px #c442da24)}
+.gloveSmoothNative .smoothCenterReadout{text-align:center;font-size:12px;font-weight:850;letter-spacing:.1em;color:#d9c9fa;min-height:19px}
+.gloveSmoothNative .smoothHint{text-align:center;font-size:12px;color:#a5abc8;margin:0}
+.gloveSmoothNative .smoothMeterLabel{display:flex;justify-content:space-between;font-size:11px;color:#adb1ca;font-weight:700;margin-top:8px}
+.gloveSmoothNative .smoothMeter{height:12px;border-radius:30px;background:#080915;border:1px solid #49405b;overflow:hidden;margin-top:6px}
+.gloveSmoothNative .smoothMeter i{display:block;height:100%;width:0;background:linear-gradient(90deg,#9064ff,#e963f7,#ffcc7f);transition:width .08s linear}
+.gloveSmoothNative .smoothButtons{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:12px}
+.gloveSmoothNative .smoothButtons button{font:inherit;min-height:60px;border:1px solid #7b6997;border-radius:13px;color:#fff;background:linear-gradient(180deg,#403256,#221d39);font-size:clamp(12px,2.5vw,16px);font-weight:900;touch-action:none;user-select:none;cursor:pointer;box-shadow:inset 0 1px #fff2}
+.gloveSmoothNative .smoothButtons button:hover{border-color:#d4a7ff}
+.gloveSmoothNative .smoothButtons button.held,.gloveSmoothNative .smoothButtons button:active{background:linear-gradient(180deg,#6e3e91,#3b2259);box-shadow:0 0 22px #c24ce044,inset 0 1px #fff4}
+.gloveSmoothNative .smoothKey{border:1px solid #ffffff5b;padding:5px 10px;border-radius:7px;font-size:12px;background:#ffffff17;margin:0 5px}
+.gloveSmoothNative .smoothInstructions{text-align:center;color:#bdc1d5;font-size:12px;margin:10px 0}
+.gloveSmoothNative .smoothWatching{text-align:center;padding:12px;color:#e2d5fb}
+.gloveSmoothNative .smoothBanner{border:1px solid #65456d;background:#261c36;border-radius:12px;padding:10px 13px;margin-top:10px;font-size:12px;min-height:40px;color:#e7d9f4}
+@media(max-width:560px){.gloveSmoothNative{width:98vw;padding:12px 10px;border-radius:13px}.gloveSmoothNative .smoothHead h2{font-size:22px}.gloveSmoothNative .smoothStats{gap:5px;margin-top:12px}.gloveSmoothNative .smoothStats>div{padding:7px 5px}.gloveSmoothNative .smoothStats small{font-size:9px}.gloveSmoothNative .smoothDialWrap{margin:-5px auto -15px}.gloveSmoothNative .smoothButtons{gap:7px}.gloveSmoothNative .smoothKey{font-size:10px;padding:4px}.gloveSmoothNative .smoothHint{font-size:10px}.gloveSmoothNative .smoothButtons button{min-height:54px}}
+@media(max-height:740px){.gloveSmoothNative .smoothDialWrap{max-width:min(440px,60vh)}.gloveSmoothNative .smoothStats{margin-top:8px}.gloveSmoothNative .smoothButtons button{min-height:48px}}
+
+/* Keep the user-designed Smooth Criminal stage flush with the regular minigame overlay. */
+#gloveStage.smoothStage{width:min(940px,96vw);max-height:none;overflow:visible;border:0;padding:0;background:transparent;border-radius:22px;box-shadow:none}
+#gloveStage.smoothStage .gloveSmoothNative{width:100%;max-height:calc(100dvh - 22px);overflow-y:auto;overflow-x:hidden}
+@media(max-width:560px){#gloveStage.smoothStage{width:98vw}#gloveStage.smoothStage .gloveSmoothNative{max-height:calc(100dvh - 12px)}}
+
+.circuitDeck{display:grid;grid-template-columns:1.3fr 1fr;gap:14px;margin-top:16px}
+.circuitDeck section{padding:22px;border-radius:16px;border:1px solid #475272;background:linear-gradient(115deg,#202b48,#151925)}
+.circuitDeck section:last-child{background:linear-gradient(115deg,#253638,#141d24);border-color:#405958}
+.circuitDeck h3{margin:8px 0 4px;font-size:1.5rem}
+.circuitDeck p{color:#c5cddd;max-width:58ch;margin:0 0 16px}
+.circuitDeck a{display:inline-block;text-decoration:none}
+@media(max-width:760px){.circuitDeck{grid-template-columns:1fr}}

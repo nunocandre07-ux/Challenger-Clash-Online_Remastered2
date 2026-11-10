@@ -1,0 +1,23 @@
+{
+  "name": "challenger-clash-online",
+  "version": "2.0.0",
+  "private": true,
+  "description": "Real-time two-player Challenger Clash arena with solo CPU battles, timed clashes, and server-authoritative combat.",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node --watch server.js",
+    "check": "node --check server.js && node --check casino-judas-rules.js && node --check test/server.test.js && node --check test/logic.test.js && node scripts/check.js",
+    "test": "node --test test/*.test.js"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "dependencies": {
+    "express": "5.2.1",
+    "socket.io": "4.8.4"
+  },
+  "devDependencies": {
+    "socket.io-client": "4.8.4"
+  }
+}

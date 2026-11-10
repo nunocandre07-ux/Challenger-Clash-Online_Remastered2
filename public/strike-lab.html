@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#102119"><title>Strike Lab · Challenger Clash</title>
+<style>
+*{box-sizing:border-box}body{margin:0;background:#101a17;color:#f3f5ec;font:16px/1.5 "Segoe UI",system-ui,sans-serif}main{max-width:880px;margin:auto;padding:clamp(20px,5vw,64px)}header,footer,.readout,.controls{display:flex;align-items:center;justify-content:space-between;gap:12px}header{border-bottom:1px solid #47584c;padding-bottom:16px}header b,.label{font:700 .77rem/1.4 ui-monospace,monospace;letter-spacing:.12em;text-transform:uppercase}a{color:#dbfac0}h1{font-size:clamp(3rem,12vw,6.8rem);line-height:.95;letter-spacing:-.07em;margin:40px 0 14px}h1 span{color:#beef71}p{color:#ccdacd;margin:0 0 24px}.console{background:#1b2a22;border:1px solid #526652;border-radius:18px;padding:clamp(16px,4vw,32px)}.readout{align-items:flex-start}.readout strong{display:block;font:700 clamp(1.4rem,5vw,2.3rem) ui-monospace,monospace}.label{color:#b2c1ad}.rail{height:90px;position:relative;background:repeating-linear-gradient(90deg,#111a16 0 calc(5% - 1px),#37483e calc(5% - 1px) 5%);margin:28px 0 12px;border-block:1px solid #576d55}.zone,.core,.needle{position:absolute;top:0;bottom:0}.zone{background:#6b934c;left:36%;width:28%}.core{background:#f4cb66;left:46%;width:8%}.needle{background:white;left:0;width:4px;transform:translateX(-50%);box-shadow:0 0 8px #fff8}.needle:before{content:'';position:absolute;left:-5px;top:-1px;border:7px solid transparent;border-top-color:white}.legend{font-size:.8rem;color:#bbcfbd}.legend b{color:#f4cb66}.controls{margin:24px 0 14px;flex-wrap:wrap}button{font:inherit;font-weight:750;border:0;border-radius:8px;padding:14px 26px;color:#112017;background:#c7ef8d;cursor:pointer;touch-action:manipulation}button:disabled{background:#899b80;color:#19251b}button:focus-visible,a:focus-visible{outline:3px solid white;outline-offset:4px}#feedback{min-height:1.6em;font-weight:650}.history{display:grid;grid-template-columns:repeat(8,1fr);gap:5px;list-style:none;padding:0;margin:18px 0 0}.history li{text-align:center;border-bottom:3px solid #566658;color:#adb9ab}.history .perfect{color:#ffd77d;border-color:currentColor}.history .good{color:#c1ed89;border-color:currentColor}.history .miss{color:#ffab93;border-color:currentColor}footer{margin-top:15px;color:#b3c0b3;font-size:.85rem}
+</style></head><body><main>
+<header><b>Challenger Clash</b><a href="/" id="arena">Return to arena</a></header>
+<h1>Strike <span>Lab</span></h1><p>Eight strikes. Stop the white needle in the green zone. Hit the gold center for a perfect strike.</p>
+<section class="console" aria-label="Timing drill"><div class="readout"><div><span class="label">Strike</span><strong id="round">1 / 8</strong></div><div><span class="label">Chain</span><strong id="chain">0</strong></div><div><span class="label">Score</span><strong id="score">0</strong></div></div>
+<div class="rail" aria-hidden="true"><div class="zone"></div><div class="core"></div><div class="needle"></div></div><div class="legend">Green +50 &nbsp; <b>Gold +100</b> &nbsp; Consecutive hits +10 per link</div>
+<div class="controls"><button id="strike">Start drill</button><span class="label">Tap or Space</span></div><div id="feedback" role="status">Take a practice run at your own pace.</div>
+<ol class="history" aria-label="Strike history"></ol></section><footer><span>Personal best</span><strong id="best">0</strong></footer></main>
+<script>
+'use strict';
+const el=id=>document.getElementById(id);
+const rounds=[50,68,32,57,76,42,27,60];
+const needle=document.querySelector('.needle'), zone=document.querySelector('.zone'),core=document.querySelector('.core');
+let index=0,score=0,chain=0,best=0,start=0,frame=0,phase='ready',position=0,pausedAt=null;
+try{best=Number(localStorage.getItem('cc-strike-best'))||0;}catch{}
+el('best').textContent=best;
+if(location.protocol==='file:')el('arena').hidden=true;
+const marks=rounds.map((_,i)=>{
+  const mark=document.createElement('li');mark.textContent='·';mark.setAttribute('aria-label','Strike '+(i+1)+' pending');
+  document.querySelector('.history').append(mark);return mark;
+});
+function animate(now){
+  const sweep=(now-start)/(1150-index*65)%2;
+  position=100*(1-Math.abs(sweep-1));needle.style.left=position+'%';
+  frame=requestAnimationFrame(animate);
+}
+function begin(){
+  const center=rounds[index],width=28-index;
+  zone.style.left=(center-width/2)+'%';zone.style.width=width+'%';
+  core.style.left=(center-4)+'%';core.style.width='8%';
+  el('round').textContent=(index+1)+' / 8';el('strike').textContent='Strike';el('strike').disabled=false;
+  phase='sweep';start=performance.now();animate(start);
+}
+function press(){
+  if(phase==='ready'||phase==='done'){
+    index=score=chain=0;el('chain').textContent=el('score').textContent=0;
+    marks.forEach((m,i)=>{m.className='';m.textContent='·';m.setAttribute('aria-label','Strike '+(i+1)+' pending');});
+    el('feedback').textContent='Aim for the gold center.';begin();return;
+  }
+  if(phase!=='sweep'||document.hidden)return;
+  cancelAnimationFrame(frame);
+  const offset=position-rounds[index],distance=Math.abs(offset);
+  const grade=distance<=4?'Perfect':distance<=(28-index)/2?'Good':'Miss';
+  chain=grade==='Miss'?0:chain+1;
+  const points=(grade==='Perfect'?100:grade==='Good'?50:0)+Math.max(0,chain-1)*10;
+  score+=points;el('score').textContent=score;el('chain').textContent=chain;
+  const mark=marks[index];mark.className=grade.toLowerCase();mark.textContent=grade==='Perfect'?'★':grade==='Good'?'✓':'×';
+  mark.setAttribute('aria-label','Strike '+(index+1)+' '+grade);
+  const result=grade==='Miss'?'Miss · '+(offset<0?'left':'right')+' of target':grade+' · +'+points;
+  if(++index===rounds.length){
+    phase='done';const record=score>best;
+    if(record){best=score;el('best').textContent=best;try{localStorage.setItem('cc-strike-best',String(best));}catch{}}
+    el('feedback').textContent=result+'. '+(record?'New personal best! ':'Run complete. ')+score+' points.';
+    el('strike').textContent='Play again';return;
+  }
+  el('feedback').textContent=result;phase='between';el('strike').disabled=true;
+  setTimeout(()=>{if(document.hidden){phase='waiting';}else begin();},650);
+}
+el('strike').onclick=press;
+document.addEventListener('keydown',e=>{
+  if(e.code==='Space'&&e.target.tagName!=='A'){e.preventDefault();if(!e.repeat)press();}
+});
+document.addEventListener('visibilitychange',()=>{
+  if(document.hidden&&phase==='sweep'){cancelAnimationFrame(frame);pausedAt=performance.now();}
+  else if(!document.hidden&&phase==='sweep'&&pausedAt!==null){start+=performance.now()-pausedAt;pausedAt=null;animate(performance.now());}
+  else if(!document.hidden&&phase==='waiting')begin();
+});
+</script></body></html>
